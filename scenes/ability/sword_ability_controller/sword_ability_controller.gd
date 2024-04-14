@@ -5,7 +5,7 @@ const MAX_RANGE = 150
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass
+	$Timer.timeout.connect(_on_timer_timeout)
 
 func _on_timer_timeout():
 	# get the player and enemies
@@ -32,3 +32,8 @@ func _on_timer_timeout():
 	var sword_instance = sword_ability.instantiate() as Node2D
 	player.get_parent().add_child(sword_instance)
 	sword_instance.global_position = enemies[0].global_position
+	#randomise sword location by 2*pi (TAU) * 4 around the enemy position
+	sword_instance.global_position += Vector2.RIGHT.rotated(randf_range(0, TAU)) * 4
+	
+	var enemy_direction = enemies[0].global_position - sword_instance.global_position
+	sword_instance.rotation = enemy_direction.angle()
